@@ -5,7 +5,7 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sou
 
 ENV SUPERVISOR_VERSION 3.3.0
 
-RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' \
+RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev rsyslog inotify-tools' \
     && set -x \
     && apt-get update && apt-get install --no-install-recommends -yqq $buildDeps \
     cron \
@@ -54,7 +54,7 @@ RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/hapro
         	LUA_INC=/opt/lua53/include/ LDFLAGS=-ldl \
 		all \
 		install-bin \
-	&& mkdir -p /usr/local/etc/haproxy \
+	&& mkdir -p /usr/local/etc/haproxy /run/haproxy /var/lib/haproxy/dev \
 	&& cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
 	&& rm -rf /usr/src/haproxy
 
@@ -66,6 +66,8 @@ COPY haproxy-acme-validation-plugin/cert-renewal-haproxy.sh /
 
 COPY crontab.txt /var/crontab.txt
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
+
+COPY 49-haproxy.conf /etc/rsyslog.d/49-haproxy.conf
 
 COPY supervisord.conf /etc/supervisord.conf
 COPY certs.sh /
