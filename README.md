@@ -32,4 +32,5 @@ HAProxy's functionality per se, consider [this similar image for Nginx](https://
 
 ### License and Copyright
 &copy; Gregory Poudrel, Licensed under GPL-2. Some components MIT license.
+
 Original author: &copy; Brad Jones LLC, Licensed under GPL-2. Some components MIT license.
